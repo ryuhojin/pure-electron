@@ -13,7 +13,7 @@ const createWindow = () => {
     })
 
     win.loadFile('index.html')
-    console.log("ELECTRON APP RUNNING ON 3000")
+    console.log("ELECTRON APP IS RUNNING ON 3000")
 }
 
 const server = http.createServer((req, res) => {
@@ -28,7 +28,6 @@ const server = http.createServer((req, res) => {
         res.statusCode = 404;
         res.end(JSON.stringify({ error: '404 Not Found' }))
     }
-
 })
 
 server.listen(8080, () => {
