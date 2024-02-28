@@ -1,15 +1,19 @@
 const { app, BrowserWindow } = require('electron');
 const http = require('http');
+const path = require('path');
 
+let win = null;
 const createWindow = () => {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 600,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
     win.loadFile('index.html')
     console.log("ELECTRON APP RUNNING ON 3000")
-
 }
 
 const server = http.createServer((req, res) => {
@@ -18,6 +22,7 @@ const server = http.createServer((req, res) => {
 
     if (req.url == '/api/recieveToken') {
         const token = { token: "SampleToken" };
+        win.webContents.send('approachExternalServer');
         res.end(JSON.stringify(token));
     } else {
         res.statusCode = 404;
@@ -32,7 +37,7 @@ server.listen(8080, () => {
 
 app.whenReady().then(() => {
     createWindow();
-    
+
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
